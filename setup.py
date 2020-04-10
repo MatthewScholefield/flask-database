@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='flask-database',
-    version='0.1.0',
+    version='0.1.1',
     description='Simple Flask database integration',
     url='https://github.com/matthewscholefield/flask-database',
     author='Matthew D. Scholefield',
