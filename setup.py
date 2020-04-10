@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='flask-database',
-    version='0.1.1',
+    version='0.1.2',
     description='Simple Flask database integration',
     url='https://github.com/matthewscholefield/flask-database',
     author='Matthew D. Scholefield',
@@ -16,8 +16,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    keywords='flask dbutils',
-    py_modules=['flask_dbutils'],
+    keywords='flask database',
+    py_modules=['flask_database'],
     install_requires=[
         'Flask',
         'DBUtils'
