@@ -8,6 +8,7 @@ class Database:
     def __init__(self, app=None, db_module=None, **db_args):
         self.pool = None
         self.storage = self
+        self.is_detached = False
         if app or db_module:
             self.init_app(app, db_module, **db_args)
 
@@ -62,8 +63,10 @@ class Database:
     
     def detach(self):
         """Separates from Flask (ie. if using database in a script)"""
-        self.storage = self
-        atexit.register(lambda: self._teardown(None))
+        if not self.is_detached:
+            self.is_detached = True
+            self.storage = self
+            atexit.register(lambda: self._teardown(None))
 
     def _teardown(self, exception):
         if hasattr(self.storage, 'dbconn'):
