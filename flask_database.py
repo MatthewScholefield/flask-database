@@ -38,8 +38,10 @@ class Database:
     def run(self, sql, args=None):
         cursor = self.conn.cursor()
         cursor.execute(sql, args)
+        last_id = cursor.lastrowid
         self.conn.commit()
         cursor.close()
+        return last_id
     
     def __enter__(self):
         self.storage.dbcursor = self.conn.cursor()
