@@ -73,6 +73,7 @@ sudo mysql -u root # If you already set a password use 'mysql -u root -p'
 ```sql
 CREATE DATABASE my_database;
 CREATE USER my_user@localhost IDENTIFIED BY '123';
+GRANT ALL PRIVILEGES ON my_database. * TO my_user@localhost;
 ```
 
 ```bash
