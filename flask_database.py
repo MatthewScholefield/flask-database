@@ -1,4 +1,5 @@
 import atexit
+from contextlib import contextmanager
 
 from DBUtils.PooledDB import PooledDB, SharedDBConnection
 from flask import current_app, g
@@ -9,6 +10,7 @@ class Database:
         self.pool = None
         self.storage = self
         self.is_detached = False
+        self.error_wrapper = contextmanager(lambda: None)
         if app or db_module:
             self.init_app(app, db_module, **db_args)
 
@@ -22,26 +24,29 @@ class Database:
             app.teardown_appcontext(self._teardown)
     
     def fetch_one(self, sql, args=None):
-        cursor = self.conn.cursor()
-        cursor.execute(sql, args)
-        result = cursor.fetchone()
-        cursor.close()
-        return result
+        with self.error_wrapper():
+            cursor = self.conn.cursor()
+            cursor.execute(sql, args)
+            result = cursor.fetchone()
+            cursor.close()
+            return result
 
     def fetch_all(self, sql, args=None):
-        cursor = self.conn.cursor()
-        cursor.execute(sql, args)
-        results = cursor.fetchall()
-        cursor.close()
-        return results
+        with self.error_wrapper():
+            cursor = self.conn.cursor()
+            cursor.execute(sql, args)
+            results = cursor.fetchall()
+            cursor.close()
+            return results
     
     def run(self, sql, args=None):
-        cursor = self.conn.cursor()
-        cursor.execute(sql, args)
-        last_id = cursor.lastrowid
-        self.conn.commit()
-        cursor.close()
-        return last_id
+        with self.error_wrapper():
+            cursor = self.conn.cursor()
+            cursor.execute(sql, args)
+            last_id = cursor.lastrowid
+            self.conn.commit()
+            cursor.close()
+            return last_id
     
     def __enter__(self):
         self.storage.dbcursor = self.conn.cursor()
